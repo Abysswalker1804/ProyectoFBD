@@ -22,8 +22,8 @@ public class HelloApplication extends Application {
     private Panel pnlPrincipal;
     private BorderPane bdpPrincipal;
     private MenuBar mnbPrincipal;
-    private Menu menPdctos, menPedidos, menClientes, menConfigPuerto;
-    private MenuItem mitPdctos, mitPedidos, mitClientes, mitConfigPuerto;
+    private Menu menPdctos, menPedidos, menClientes, menConfigPuerto, menSalir;
+    private MenuItem mitPdctos, mitPedidos, mitClientes, mitConfigPuerto, mitSalir;
     @Override
     public void start(Stage stage) throws IOException {
         CrearUI(stage);
@@ -43,6 +43,8 @@ public class HelloApplication extends Application {
         mitClientes.setOnAction(event -> new ClientesScreen(ventana));
         mitConfigPuerto=new MenuItem("Configurar Puerto");
         mitConfigPuerto.setOnAction(event -> Puerto(ventana));
+        mitSalir=new MenuItem("Salir");
+        mitSalir.setOnAction(event -> System.exit(0));
         menPdctos=new Menu("Productos");
         menPdctos.getItems().add(mitPdctos);
         menPedidos=new Menu("Pedidos");
@@ -51,10 +53,11 @@ public class HelloApplication extends Application {
         menClientes.getItems().add(mitClientes);
         menConfigPuerto=new Menu("Configurar Puerto");
         menConfigPuerto.getItems().add(mitConfigPuerto);
+        menSalir=new Menu("Salir");
+        menSalir.getItems().add(mitSalir);
         mnbPrincipal=new MenuBar();
-        mnbPrincipal.getMenus().addAll(menPdctos,menPedidos,menClientes,menConfigPuerto);
+        mnbPrincipal.getMenus().addAll(menPdctos,menPedidos,menClientes,menConfigPuerto,menSalir);
         bdpPrincipal.setTop(mnbPrincipal);
-
 
         pnlPrincipal.setBody(bdpPrincipal);
         escena=new Scene(pnlPrincipal);
@@ -88,6 +91,14 @@ public class HelloApplication extends Application {
                 if (result.get() == ButtonType.OK){}
                 txtPuerto.setText("");
             }
+        }else{
+            Alert alert=new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Algo salió mal...");
+            alert.setContentText("La información ingresada no corresponde a un puerto válido");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK){}
+            txtPuerto.setText("");
         }
     }
     private Scene PuertoScreen(){
