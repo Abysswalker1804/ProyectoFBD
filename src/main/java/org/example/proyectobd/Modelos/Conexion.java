@@ -52,7 +52,15 @@ public class Conexion {
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection= DriverManager.getConnection("jdbc:mysql://127.0.0.1:"+PORT+"/"+DB+"?allowPublicKeyRetrieval=true&useSSL=false",USER,PWD);
-            System.out.println("Conexion.crearConexion()> Conexión exitosa! :)");
+            //System.out.println("Conexion.crearConexion()> Conexión exitosa! :)");
+            try{
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("BD establecida");
+                alert.setHeaderText("Conexión exitosa!");
+                alert.setContentText("Se ha conectado correctamente con la Base de Datos!");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {}
+            }catch (Exception e1){}
         }catch(Exception e){
             //System.out.println("Conexion.crearConexion()> Conexión fallida! :(");
             try{
@@ -61,8 +69,7 @@ public class Conexion {
                 alert.setHeaderText("Algo salió mal...");
                 alert.setContentText("Ha ocurrido algún error al intentar acceder a la base de datos.\nRevise su configuración!");
                 Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK) {
-                }
+                if (result.get() == ButtonType.OK) {}
                 HelloApplication app = new HelloApplication();
                 app.ConfigurarDB(propietario);
             }catch (Exception e1){}

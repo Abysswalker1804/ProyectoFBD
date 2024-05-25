@@ -17,7 +17,7 @@ import org.kordamp.bootstrapfx.scene.layout.Panel;
 import java.util.Optional;
 
 public class EmpleadosScreen {
-    private Stage propietario, modalStage;
+    private Stage modalStage;
     private Scene escena;
     private Panel pnlPrincipal;
     private BorderPane bdpPrincipal;
@@ -25,7 +25,6 @@ public class EmpleadosScreen {
     private Button btnAgregar;
     private TableView<EmpleadoDAO> tbvEmp;
     public EmpleadosScreen(Stage propietario){
-        this.propietario=propietario;
         CrearUI();
         modalStage=new Stage();
         modalStage.initModality(Modality.WINDOW_MODAL);

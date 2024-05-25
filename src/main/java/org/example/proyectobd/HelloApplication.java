@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import org.example.proyectobd.Modelos.Conexion;
 import org.example.proyectobd.Vistas.ClientesScreen;
 import org.example.proyectobd.Vistas.EmpleadosScreen;
+import org.example.proyectobd.Vistas.PedidosScreen;
 import org.kordamp.bootstrapfx.BootstrapFX;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
@@ -33,12 +34,12 @@ public class HelloApplication extends Application {
         stage.setScene(escena);
         stage.setMaximized(true);
         stage.show();
-        ConfigurarDB(stage);
-        //Especificaciones de DB
-        /*Conexion.setDB("PasteleriaPrueba");
+        //ConfigurarDB(stage);
+        //Especificaciones de DB default
+        Conexion.setDB("PasteleriaPrueba");
         Conexion.setPORT("3306");
         Conexion.setUSER("javaAplication");
-        Conexion.setPWD("1234");*/
+        Conexion.setPWD("1234");
 
         Conexion.crearConexion(stage);
     }
@@ -49,6 +50,7 @@ public class HelloApplication extends Application {
 
         mitPdctos=new MenuItem("Productos");
         mitPedidos=new MenuItem("Pedidos");
+        mitPedidos.setOnAction(event -> new PedidosScreen(ventana));
         mitClientes=new MenuItem("Clientes");
         mitClientes.setOnAction(event -> new ClientesScreen(ventana));
         mitEmpleados=new MenuItem("Empleados");
