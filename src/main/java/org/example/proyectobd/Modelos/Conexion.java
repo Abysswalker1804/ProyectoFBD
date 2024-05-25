@@ -1,7 +1,13 @@
 package org.example.proyectobd.Modelos;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.stage.Stage;
+import org.example.proyectobd.HelloApplication;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.Optional;
 
 public class Conexion {
     static private String DB;
@@ -42,13 +48,24 @@ public class Conexion {
         Conexion.PWD = PWD;
     }
 
-    public static void crearConexion() {
+    public static void crearConexion(Stage propietario) {
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection= DriverManager.getConnection("jdbc:mysql://127.0.0.1:"+PORT+"/"+DB+"?allowPublicKeyRetrieval=true&useSSL=false",USER,PWD);
             System.out.println("Conexion.crearConexion()> Conexión exitosa! :)");
         }catch(Exception e){
-            System.out.println("Conexion.crearConexion()> Conexión fallida! :(");
+            //System.out.println("Conexion.crearConexion()> Conexión fallida! :(");
+            try{
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Algo salió mal...");
+                alert.setContentText("Ha ocurrido algún error al intentar acceder a la base de datos.\nRevise su configuración!");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                }
+                HelloApplication app = new HelloApplication();
+                app.ConfigurarDB(propietario);
+            }catch (Exception e1){}
             //e.printStackTrace();
         }
     }

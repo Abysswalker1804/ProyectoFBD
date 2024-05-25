@@ -1,4 +1,4 @@
-package org.example.proyectobd.Components;
+/*package org.example.proyectobd.Components;
 
 import javafx.scene.control.*;
 
@@ -13,4 +13,4 @@ public abstract class ButtonCell extends TableCell<Object,String> {
         if(!empty)
             this.setGraphic(btnCelda);
     }
-}
+}*/

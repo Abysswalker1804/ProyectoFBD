@@ -4,26 +4,27 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.example.proyectobd.Formularios.ClienteFormulario;
+import org.example.proyectobd.Formularios.EmpleadoFormulario;
 import org.example.proyectobd.Modelos.ClienteDAO;
+import org.example.proyectobd.Modelos.EmpleadoDAO;
 import org.kordamp.bootstrapfx.BootstrapFX;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.util.Optional;
 
-public class ClientesScreen extends Stage {
+public class EmpleadosScreen {
     private Stage propietario, modalStage;
     private Scene escena;
     private Panel pnlPrincipal;
     private BorderPane bdpPrincipal;
     private ToolBar tlbBarra;
     private Button btnAgregar;
-    private TableView<ClienteDAO> tbvCliente;
-    public ClientesScreen(Stage propietario){
+    private TableView<EmpleadoDAO> tbvEmp;
+    public EmpleadosScreen(Stage propietario){
         this.propietario=propietario;
         CrearUI();
         modalStage=new Stage();
@@ -35,81 +36,87 @@ public class ClientesScreen extends Stage {
     }
     private void CrearUI(){
         bdpPrincipal=new BorderPane();
-        pnlPrincipal=new Panel("Clientes");
+        pnlPrincipal=new Panel("Empleados");
         pnlPrincipal.getStyleClass().add("panel-success");
         btnAgregar=new Button("Agregar");
-        btnAgregar.setOnAction(event -> new ClienteFormulario(modalStage, tbvCliente,null));
+        btnAgregar.setOnAction(event -> new EmpleadoFormulario(modalStage, tbvEmp,null));
         tlbBarra=new ToolBar(btnAgregar);
         bdpPrincipal.setTop(tlbBarra);
         pnlPrincipal.setBody(bdpPrincipal);
         CrearTabla();
-        bdpPrincipal.setCenter(tbvCliente);
-        escena=new Scene(pnlPrincipal,350,300);
+        bdpPrincipal.setCenter(tbvEmp);
+        escena=new Scene(pnlPrincipal,520,300);
         escena.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
     }
     private void CrearTabla(){
-        tbvCliente=new TableView<>();
-        ClienteDAO objCli=new ClienteDAO();
+        tbvEmp=new TableView<>();
+        EmpleadoDAO objEmp=new EmpleadoDAO();
 
-        TableColumn<ClienteDAO,Integer> tbcNumero=new TableColumn<>("No Cliente");
-        tbcNumero.setCellValueFactory(new PropertyValueFactory<>("noCliente"));
+        TableColumn<EmpleadoDAO,String> tbcCve=new TableColumn<>("Clave");
+        tbcCve.setCellValueFactory(new PropertyValueFactory<>("cveEmpleado"));
 
-        TableColumn<ClienteDAO,String> tbcNombre=new TableColumn<>("Nombre");
+        TableColumn<EmpleadoDAO,String> tbcNombre=new TableColumn<>("Nombre");
         tbcNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
 
-        TableColumn<ClienteDAO,String> tbcEditar=new TableColumn<>("Editar");
+        TableColumn<EmpleadoDAO,String> tbcTelefono=new TableColumn<>("Teléfono");
+        tbcTelefono.setCellValueFactory(new PropertyValueFactory<>("telefono"));
+
+        TableColumn<EmpleadoDAO,Double> tbcSueldo=new TableColumn<>("Sueldo");
+        tbcSueldo.setCellValueFactory(new PropertyValueFactory<>("sueldo"));
+
+        TableColumn<EmpleadoDAO,String> tbcEditar=new TableColumn<>("Editar");
         tbcEditar.setCellFactory(
-                new Callback<TableColumn<ClienteDAO, String>, TableCell<ClienteDAO, String>>() {
+                new Callback<TableColumn<EmpleadoDAO, String>, TableCell<EmpleadoDAO, String>>() {
                     @Override
-                    public TableCell<ClienteDAO, String> call(TableColumn<ClienteDAO, String> param) {
-                        return new ButtonCliente(modalStage,1);
+                    public TableCell<EmpleadoDAO, String> call(TableColumn<EmpleadoDAO, String> param) {
+                        return new ButtonEmpleado(modalStage,1);
                     }
                 }
         );
 
-        TableColumn<ClienteDAO,String> tbcEliminar=new TableColumn<>("Eliminar");
+        TableColumn<EmpleadoDAO,String> tbcEliminar=new TableColumn<>("Eliminar");
         tbcEliminar.setCellFactory(
-                new Callback<TableColumn<ClienteDAO, String>, TableCell<ClienteDAO, String>>() {
+                new Callback<TableColumn<EmpleadoDAO, String>, TableCell<EmpleadoDAO, String>>() {
                     @Override
-                    public TableCell<ClienteDAO, String> call(TableColumn<ClienteDAO, String> param) {
-                        return new ButtonCliente(modalStage,2);
+                    public TableCell<EmpleadoDAO, String> call(TableColumn<EmpleadoDAO, String> param) {
+                        return new ButtonEmpleado(modalStage,2);
                     }
                 }
         );
 
-        tbvCliente.getColumns().addAll(tbcNumero,tbcNombre,tbcEditar,tbcEliminar);
-        tbvCliente.setItems(objCli.CONSULTAR());
+        tbvEmp.getColumns().addAll(tbcCve,tbcNombre,tbcTelefono,tbcSueldo,tbcEditar,tbcEliminar);
+        tbvEmp.setItems(objEmp.CONSULTAR());
     }
 }
 
-class ButtonCliente extends TableCell<ClienteDAO,String> {
+class ButtonEmpleado extends TableCell<EmpleadoDAO,String> {
     private Stage propietario;
     private int opc;
     private Button btnCelda;
-    private ClienteDAO objCli;
+    private EmpleadoDAO objEmp;
 
-    public ButtonCliente(Stage propietario,int opc){
+    public ButtonEmpleado(Stage propietario,int opc){
         this.propietario=propietario;
         this.opc=opc;
         String text=(opc==1)?"Editar":"Eliminar";
         btnCelda=new Button(text);
         btnCelda.setOnAction(event -> AccionBoton());
     }
-    protected void AccionBoton() {
-        TableView<ClienteDAO> tbvCliente=ButtonCliente.this.getTableView();
-        objCli=tbvCliente.getItems().get(ButtonCliente.this.getIndex());
+    private void AccionBoton(){
+        TableView<EmpleadoDAO> tbvEmp=ButtonEmpleado.this.getTableView();
+        objEmp=tbvEmp.getItems().get(ButtonEmpleado.this.getIndex());
         if(opc==1){
-            new ClienteFormulario(propietario, tbvCliente, objCli);
+            new EmpleadoFormulario(propietario, tbvEmp, objEmp);
         }else{
             Alert alert=new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Mensaje del Sistema");
             alert.setHeaderText("Confirmación de Acción");
-            alert.setContentText("¿Desea borrar al cliente "+objCli.getNombre()+"?");
+            alert.setContentText("¿Desea borrar al empleado "+objEmp.getNombre()+"?");
             Optional<ButtonType> result = alert.showAndWait();
             if(result.get()==ButtonType.OK){
-                objCli.ELIMINAR();
-                tbvCliente.setItems(objCli.CONSULTAR());
-                tbvCliente.refresh();
+                objEmp.ELIMINAR();
+                tbvEmp.setItems(objEmp.CONSULTAR());
+                tbvEmp.refresh();
             }
         }
     }

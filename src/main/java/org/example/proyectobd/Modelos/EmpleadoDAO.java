@@ -9,16 +9,18 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Optional;
 
-public class ClienteDAO {
-    private int noCliente;
+public class EmpleadoDAO {
+    private String cveEmpleado;
     private String nombre;
+    private String telefono;
+    private double sueldo;
 
-    public int getNoCliente() {
-        return noCliente;
+    public String getCveEmpleado() {
+        return cveEmpleado;
     }
 
-    public void setNoCliente(int noCliente) {
-        this.noCliente = noCliente;
+    public void setCveEmpleado(String cveEmpleado) {
+        this.cveEmpleado = cveEmpleado;
     }
 
     public String getNombre() {
@@ -29,8 +31,24 @@ public class ClienteDAO {
         this.nombre = nombre;
     }
 
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public double getSueldo() {
+        return sueldo;
+    }
+
+    public void setSueldo(double sueldo) {
+        this.sueldo = sueldo;
+    }
+
     public void INSERTAR(){
-        String query="INSERT INTO cliente(nombre) VALUES('"+nombre+"')";
+        String query="INSERT INTO Empleado(cveEmpleado, nombre, telefono, sueldo) VALUES('"+cveEmpleado+"','"+nombre+"','"+telefono+"',"+sueldo+")";
         try{
             Statement stmt=Conexion.connection.createStatement();//El statement se usa para interactuar con sql
             stmt.executeUpdate(query);//Usar para insertar, actualizar o eliminar
@@ -39,7 +57,7 @@ public class ClienteDAO {
         }
     }
     public void ACTUALIZAR(){
-        String query="UPDATE cliente SET nombre='"+nombre+"' WHERE noCliente="+noCliente;
+        String query="UPDATE Empleado SET nombre='"+nombre+"',telefono='"+telefono+"', sueldo='"+sueldo+"' WHERE cveEmpleado='"+cveEmpleado+"'";
         try{
             Statement stmt=Conexion.connection.createStatement();
             stmt.executeUpdate(query);
@@ -48,7 +66,7 @@ public class ClienteDAO {
         }
     }
     public void ELIMINAR(){
-        String query="DELETE FROM cliente WHERE noCliente="+noCliente;
+        String query="DELETE FROM Empleado WHERE cveEmpleado='"+cveEmpleado+"'";
         try{
             Statement stmt=Conexion.connection.createStatement();
             stmt.executeUpdate(query);
@@ -56,28 +74,31 @@ public class ClienteDAO {
             e.printStackTrace();
         }
     }
-    public ObservableList<ClienteDAO> CONSULTAR(){
-        ObservableList<ClienteDAO> listaEmp= FXCollections.observableArrayList();
-        String query="SELECT * FROM cliente";
+    public ObservableList<EmpleadoDAO> CONSULTAR(){
+        ObservableList<EmpleadoDAO> listaEmp= FXCollections.observableArrayList();
+        String query="SELECT * FROM Empleado";
         try{
-            ClienteDAO objCli;
+            EmpleadoDAO objEmp;
             Statement stmt=Conexion.connection.createStatement();
             ResultSet res=stmt.executeQuery(query);
             while(res.next()){
-                objCli=new ClienteDAO();
-                objCli.noCliente=res.getInt("noCliente");
-                objCli.nombre=res.getString("nombre");
-                listaEmp.add(objCli);
+                objEmp=new EmpleadoDAO();
+                objEmp.cveEmpleado=res.getString("cveEmpleado");
+                objEmp.nombre=res.getString("nombre");
+                objEmp.telefono=res.getString("telefono");
+                objEmp.sueldo=res.getDouble("sueldo");
+                listaEmp.add(objEmp);
             }
         }catch(Exception e){
-            //e.printStackTrace();
+            e.printStackTrace();
             try{
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Algo salió mal...");
                 alert.setContentText("Ha ocurrido algún error al intentar acceder a la base de datos.");
                 Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK) {}
+                if (result.get() == ButtonType.OK) {
+                }
             }catch (Exception e1){}
         }
         return  listaEmp;
