@@ -13,6 +13,15 @@ public class ProductoDAO {
     private String cveProducto;
     private double precio;
     private String cveTProd;
+    private String descripcionTProd;
+
+    public String getDescripcionTProd() {
+        return descripcionTProd;
+    }
+
+    public void setDescripcionTProd(String descripcionTProd) {
+        this.descripcionTProd = descripcionTProd;
+    }
 
     public String getCveProducto() {
         return cveProducto;

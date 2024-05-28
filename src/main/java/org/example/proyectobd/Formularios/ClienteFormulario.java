@@ -79,5 +79,4 @@ public class ClienteFormulario extends Stage {
             if(result.get()==ButtonType.OK){}
         }
     }
-
 }

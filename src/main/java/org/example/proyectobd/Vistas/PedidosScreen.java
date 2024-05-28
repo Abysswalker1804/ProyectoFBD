@@ -1,9 +1,11 @@
 package org.example.proyectobd.Vistas;
 
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -94,5 +96,32 @@ public class PedidosScreen extends Stage {
 
         tbvPed.getColumns().addAll(tbcNoPed,tbcCvePdcto,tbcfechaPed,tbcfechaEnt,tbcPrecioBase,tbcPrecioAdicional,tbcCantidad,tbcCostoTotal,tbcAbono,tbcNomCliente,tbcNomEmpleado);
         //tbvPed.setItems(objVisPed.CONSULTAR());
+    }
+}
+
+class BotonPedido extends TableCell<VistaPedidoDAO,String>{
+    private Stage propietario;
+    private Button btnCelda;
+    private VistaPedidoDAO objVisPed;
+    public BotonPedido(Stage propietario, int opc){
+        this.propietario=propietario;
+        String text="Ver detalles";
+        btnCelda=new Button(text);
+        btnCelda.setOnAction(event -> AccionBoton());
+    }
+    private void AccionBoton(){
+        TableView<VistaPedidoDAO> tbvVPed=BotonPedido.this.getTableView();
+        objVisPed=tbvVPed.getItems().get(BotonPedido.this.getIndex());
+        Label lblTexto=new Label(objVisPed.getDescripcion());
+        VBox vCajaTexto=new VBox(lblTexto);
+        vCajaTexto.setAlignment(Pos.CENTER);
+        Scene escena=new Scene(vCajaTexto);
+        Stage modalStage=new Stage();
+        modalStage.initModality(Modality.WINDOW_MODAL);
+        modalStage.initOwner(propietario);
+        modalStage.setScene(escena);
+        modalStage.setTitle("");
+        modalStage.showAndWait();
+
     }
 }

@@ -58,24 +58,28 @@ public class EmpleadoFormulario {
         if(temp.length()<3 && !temp.isEmpty() && !temp.isBlank()) {
             objEmp.setCveEmpleado(temp);
         }else{
-            Alert alert=new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Mensaje del Sistema");
-            alert.setHeaderText("Clave inválida");
-            alert.setContentText("Debe ser un máximo de 2 carácteres!");
-            Optional<ButtonType> result = alert.showAndWait();
-            if(result.get()==ButtonType.OK){}
+            try{
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Mensaje del Sistema");
+                alert.setHeaderText("Clave inválida");
+                alert.setContentText("Debe ser un máximo de 2 carácteres!");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {}
+            }catch (Exception e){}
             valoresValidos=false;
         }
         temp=txtCampos[1].getText();
         if(temp.length()<41 && !temp.isEmpty() && !temp.isBlank()) {
             objEmp.setNombre(temp);
         }else{
-            Alert alert=new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Mensaje del Sistema");
-            alert.setHeaderText("Nombre inválido");
-            alert.setContentText("Debe ser un máximo de 40 carácteres!");
-            Optional<ButtonType> result = alert.showAndWait();
-            if(result.get()==ButtonType.OK){}
+            try{
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Mensaje del Sistema");
+                alert.setHeaderText("Nombre inválido");
+                alert.setContentText("Debe ser un máximo de 40 carácteres!");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {}
+            }catch (Exception e){}
             valoresValidos=false;
         }
         temp=txtCampos[2].getText();
@@ -84,21 +88,26 @@ public class EmpleadoFormulario {
                 long i=Long.parseLong(temp);
                 objEmp.setTelefono(temp);
             }catch (Exception e){
-                Alert alert=new Alert(Alert.AlertType.WARNING);
+                try {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Mensaje del Sistema");
+                    alert.setHeaderText("Número de teléfono inválido");
+                    alert.setContentText("Debe ser un máximo de 10 carácteres!");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() == ButtonType.OK) {}
+                }catch (Exception e1){}
+                valoresValidos=false;
+            }
+        }else {
+            try{
+                Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Mensaje del Sistema");
                 alert.setHeaderText("Número de teléfono inválido");
                 alert.setContentText("Debe ser un máximo de 10 carácteres!");
                 Optional<ButtonType> result = alert.showAndWait();
-                if(result.get()==ButtonType.OK){}
-                valoresValidos=false;
-            }
-        }else {
-            Alert alert=new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Mensaje del Sistema");
-            alert.setHeaderText("Número de teléfono inválido");
-            alert.setContentText("Debe ser un máximo de 10 carácteres!");
-            Optional<ButtonType> result = alert.showAndWait();
-            if(result.get()==ButtonType.OK){}
+                if (result.get() == ButtonType.OK) {
+                }
+            }catch (Exception e){}
             valoresValidos=false;
         }
         temp=txtCampos[3].getText();
@@ -107,21 +116,25 @@ public class EmpleadoFormulario {
                 double d=Double.parseDouble(temp);
                 objEmp.setSueldo(d);
             }catch (Exception e){
-                Alert alert=new Alert(Alert.AlertType.WARNING);
+                try{
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Mensaje del Sistema");
+                    alert.setHeaderText("Cantidad salarial inválida");
+                    alert.setContentText("Revise nuevamente!");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() == ButtonType.OK) {}
+                    valoresValidos = false;
+                }catch (Exception e1){}
+            }
+        }else{
+            try{
+                Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Mensaje del Sistema");
                 alert.setHeaderText("Cantidad salarial inválida");
                 alert.setContentText("Revise nuevamente!");
                 Optional<ButtonType> result = alert.showAndWait();
-                if(result.get()==ButtonType.OK){}
-                valoresValidos=false;
-            }
-        }else{
-            Alert alert=new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Mensaje del Sistema");
-            alert.setHeaderText("Cantidad salarial inválida");
-            alert.setContentText("Revise nuevamente!");
-            Optional<ButtonType> result = alert.showAndWait();
-            if(result.get()==ButtonType.OK){}
+                if (result.get() == ButtonType.OK) {}
+            }catch (Exception e1){}
             valoresValidos=false;
         }
 

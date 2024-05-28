@@ -30,7 +30,7 @@ public class ClienteDAO {
     }
 
     public void INSERTAR(){
-        String query="INSERT INTO cliente(nombre) VALUES('"+nombre+"')";
+        String query="INSERT INTO cliente(noCliente,nombre) VALUES('"+noCliente+"','"+nombre+"')";
         try{
             Statement stmt=Conexion.connection.createStatement();//El statement se usa para interactuar con sql
             stmt.executeUpdate(query);//Usar para insertar, actualizar o eliminar
@@ -39,7 +39,7 @@ public class ClienteDAO {
         }
     }
     public void ACTUALIZAR(){
-        String query="UPDATE cliente SET nombre='"+nombre+"' WHERE noCliente="+noCliente;
+        String query="UPDATE cliente SET nombre='"+nombre+"' WHERE noCliente='"+noCliente+"'";
         try{
             Statement stmt=Conexion.connection.createStatement();
             stmt.executeUpdate(query);
@@ -48,7 +48,7 @@ public class ClienteDAO {
         }
     }
     public void ELIMINAR(){
-        String query="DELETE FROM cliente WHERE noCliente="+noCliente;
+        String query="DELETE FROM cliente WHERE noCliente='"+noCliente+"'";
         try{
             Statement stmt=Conexion.connection.createStatement();
             stmt.executeUpdate(query);

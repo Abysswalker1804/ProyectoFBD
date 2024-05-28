@@ -36,7 +36,7 @@ public class HelloApplication extends Application {
         stage.show();
         //ConfigurarDB(stage);
         //Especificaciones de DB default
-        Conexion.setDB("PasteleriaPrueba");
+        Conexion.setDB("Panaderia");
         Conexion.setPORT("3306");
         Conexion.setUSER("javaAplication");
         Conexion.setPWD("1234");
