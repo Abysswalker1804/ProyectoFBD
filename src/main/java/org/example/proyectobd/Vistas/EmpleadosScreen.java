@@ -107,16 +107,18 @@ class ButtonEmpleado extends TableCell<EmpleadoDAO,String> {
         if(opc==1){
             new EmpleadoFormulario(propietario, tbvEmp, objEmp);
         }else{
-            Alert alert=new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Mensaje del Sistema");
-            alert.setHeaderText("Confirmación de Acción");
-            alert.setContentText("¿Desea borrar al empleado "+objEmp.getNombre()+"?");
-            Optional<ButtonType> result = alert.showAndWait();
-            if(result.get()==ButtonType.OK){
-                objEmp.ELIMINAR();
-                tbvEmp.setItems(objEmp.CONSULTAR());
-                tbvEmp.refresh();
-            }
+            try{
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Mensaje del Sistema");
+                alert.setHeaderText("Confirmación de Acción");
+                alert.setContentText("¿Desea borrar al empleado " + objEmp.getNombre() + "?");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    objEmp.ELIMINAR();
+                    tbvEmp.setItems(objEmp.CONSULTAR());
+                    tbvEmp.refresh();
+                }
+            }catch (Exception e){}
         }
     }
     @Override

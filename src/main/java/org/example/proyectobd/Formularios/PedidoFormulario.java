@@ -2,17 +2,11 @@ package org.example.proyectobd.Formularios;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.example.proyectobd.Modelos.Conexion;
-import org.example.proyectobd.Modelos.DetallePedidoDAO;
-import org.example.proyectobd.Modelos.PedidoDAO;
-import org.example.proyectobd.Modelos.ProductoDAO;
+import org.example.proyectobd.Modelos.*;
 
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -29,7 +23,9 @@ public class PedidoFormulario {
     private PedidoDAO objPed;
     private DetallePedidoDAO objDetPed;
     private ProductoDAO objPdcto;
-    public PedidoFormulario(Stage propietario){
+    private TableView<VistaPedidoDAO> tbvVisPed;
+    public PedidoFormulario(Stage propietario,TableView<VistaPedidoDAO> tbvVisPed){
+        this.tbvVisPed=tbvVisPed;
         CrearUI();
         modalStage=new Stage();
         modalStage.initModality(Modality.WINDOW_MODAL);
@@ -57,8 +53,16 @@ public class PedidoFormulario {
         if(ValidarCampos()){
             try{
                 objPed.INSERTAR();
-                objPdcto.INSERTAR();
+                try{
+                    String query="SELECT noPedido FROM Pedido";
+                    Statement stmt=Conexion.connection.createStatement();
+                    ResultSet res= stmt.executeQuery(query);
+                    while (res.next()) {objDetPed.setNoPedido(res.getInt(1));}
+                }catch (Exception e){}
                 objDetPed.INSERTAR();
+                VistaPedidoDAO objVisPed=new VistaPedidoDAO();
+                tbvVisPed.setItems(objVisPed.CONSULTAR());
+                tbvVisPed.refresh();
             }catch (Exception e){
                 try {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -68,6 +72,9 @@ public class PedidoFormulario {
                     Optional<ButtonType> result = alert.showAndWait();
                     if (result.get() == ButtonType.OK) {}
                 }catch (Exception e1){}
+            }
+            for(int i=0; i< arrCampos.length; i++){
+                arrCampos[i].clear();
             }
         }
     }
@@ -79,7 +86,7 @@ public class PedidoFormulario {
         objDetPed=new DetallePedidoDAO();
         objPdcto=new ProductoDAO();
         boolean flag=true;
-        String regex="^([0-2][0-9]|3[01])-(0[1-9]|1[0-2])-(\\d{4})$";
+        String regex="^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$";
         Pattern patron=Pattern.compile(regex);
         Matcher comparadorPedido= patron.matcher(arrCampos[0].getText());
         Matcher comparadorEntrega= patron.matcher(arrCampos[1].getText());
@@ -91,7 +98,7 @@ public class PedidoFormulario {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Formato de fecha no válido");
-                alert.setContentText("Debe ingresar la fecha en un formato tipo 'DD-MM-AAAA'");
+                alert.setContentText("Debe ingresar la fecha en un formato tipo 'AAAA-MM-DD'");
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK) {}
             }catch (Exception e1){}
@@ -144,11 +151,17 @@ public class PedidoFormulario {
                 arrCampos[3].clear();
             }
         }
-        query="SELECT nombre FROM Cliente WHERE noCliente="+arrCampos[4].getText();
+        query="SELECT noCliente,nombre FROM Cliente WHERE noCliente="+arrCampos[4].getText();
         try{
             stmt= Conexion.connection.createStatement();
             res= stmt.executeQuery(query);
-            while(res.next()){objPed.setNombreCliente(res.getString(1));}
+            while(res.next()){
+                objPed.setNoCliente(res.getInt(1));
+                objPed.setNombreCliente(res.getString(2));
+            }
+            if(objPed.getNombreCliente()==null){
+                throw new Exception();
+            }
         }catch (Exception e){
             try{
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -161,11 +174,17 @@ public class PedidoFormulario {
             flag=false;
             arrCampos[4].clear();
         }
-        query="SELECT nombre FROM Empleado WHERE cveEmpleado='"+arrCampos[5].getText()+"'";
+        query="SELECT cveEmpleado,nombre FROM Empleado WHERE cveEmpleado='"+arrCampos[5].getText()+"'";
         try{
             stmt= Conexion.connection.createStatement();
             res= stmt.executeQuery(query);
-            while(res.next()){objPed.setNombreEmpleado(res.getString(1));}
+            while(res.next()){
+                objPed.setCveEmpleado(res.getString(1));
+                objPed.setNombreEmpleado(res.getString(2));
+            }
+            if(objPed.getNombreEmpleado()==null){
+                throw new Exception();
+            }
         }catch (Exception e){
             try{
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -178,11 +197,14 @@ public class PedidoFormulario {
             flag=false;
             arrCampos[5].clear();
         }
-        query="SELECT nombre FROM Producto WHERE cveProducto='"+arrCampos[6].getText()+"'";
+        query="SELECT cveProducto FROM Producto WHERE cveProducto='"+arrCampos[6].getText()+"'";
         try{
             stmt=Conexion.connection.createStatement();
             res= stmt.executeQuery(query);
             while(res.next()){objDetPed.setCveProducto(arrCampos[6].getText());}
+            if(objDetPed.getCveProducto()==null){
+                throw new Exception();
+            }
         }catch (Exception e){
             try{
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -286,22 +308,45 @@ public class PedidoFormulario {
                 arrCampos[10].clear();
             }
         }
-        query="SELECT descripcion FROM tipoProd WHERE cveTProd='"+arrCampos[11].getText()+"'";
-        try{
-            stmt=Conexion.connection.createStatement();
-            res=stmt.executeQuery(query);
-            while(res.next()){objPdcto.setDescripcionTProd(res.getString(1));}
-        }catch (Exception e){
+        if(arrCampos[11].getText().isEmpty() || arrCampos[11].getText().isBlank()){
             try{
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Tipo de Producto no existente!");
-                alert.setContentText("Ingrese un tipo de producto válido!");
+                alert.setContentText("El tipo de Producto no puede estar vacío!");
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK){}
             }catch (Exception e1){}
             flag=false;
-            arrCampos[10].clear();
+        }else{
+            query="SELECT descripcion FROM tipoProd WHERE cveTProd='"+arrCampos[11].getText()+"'";
+            try{
+                stmt=Conexion.connection.createStatement();
+                res=stmt.executeQuery(query);
+                while(res.next()){objPdcto.setCveTProd(res.getString(1));}
+            }catch (Exception e){
+                try{
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Tipo de Producto no existente!");
+                    alert.setContentText("Ingrese un tipo de producto válido!");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() == ButtonType.OK){}
+                }catch (Exception e1){}
+                flag=false;
+                arrCampos[11].clear();
+            }
+            if(!(objPed.getCostoTotal()==(objDetPed.getPrecioAdicional()+objPdcto.getPrecio()))){
+                try{
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Costo Total Inconsistente");
+                    alert.setContentText("El costo total no coincide con la suma del precio base y el precio adicional!");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() == ButtonType.OK){}
+                }catch (Exception e1){}
+                flag=false;
+            }
         }
         //Para validar al cliente y empleado hay que hacer una consulta y revisar que existan
         return  flag;

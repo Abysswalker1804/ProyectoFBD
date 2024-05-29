@@ -101,16 +101,18 @@ class ButtonCliente extends TableCell<ClienteDAO,String> {
         if(opc==1){
             new ClienteFormulario(propietario, tbvCliente, objCli);
         }else{
-            Alert alert=new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Mensaje del Sistema");
-            alert.setHeaderText("Confirmación de Acción");
-            alert.setContentText("¿Desea borrar al cliente "+objCli.getNombre()+"?");
-            Optional<ButtonType> result = alert.showAndWait();
-            if(result.get()==ButtonType.OK){
-                objCli.ELIMINAR();
-                tbvCliente.setItems(objCli.CONSULTAR());
-                tbvCliente.refresh();
-            }
+            try{
+                Alert alert=new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Mensaje del Sistema");
+                alert.setHeaderText("Confirmación de Acción");
+                alert.setContentText("¿Desea borrar al cliente "+objCli.getNombre()+"?");
+                Optional<ButtonType> result = alert.showAndWait();
+                if(result.get()==ButtonType.OK){
+                    objCli.ELIMINAR();
+                    tbvCliente.setItems(objCli.CONSULTAR());
+                    tbvCliente.refresh();
+                }
+            }catch (Exception e){}
         }
     }
     @Override

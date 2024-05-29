@@ -9,26 +9,9 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Optional;
 
-public class ProductoDAO {
-    private String cveProducto;
-    private double precio;
+public class TipoProdDAO {
     private String cveTProd;
-
-    public String getCveProducto() {
-        return cveProducto;
-    }
-
-    public void setCveProducto(String cveProducto) {
-        this.cveProducto = cveProducto;
-    }
-
-    public double getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(double precio) {
-        this.precio = precio;
-    }
+    private String descripcion;
 
     public String getCveTProd() {
         return cveTProd;
@@ -38,8 +21,15 @@ public class ProductoDAO {
         this.cveTProd = cveTProd;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
     public void INSERTAR(){
-        String query="INSERT INTO Producto(cveProducto,precio,cveTProd) VALUES('"+cveProducto+"',"+precio+",'"+cveTProd+"')";
+        String query="INSERT INTO TipoProd(cveTProd,descripcion) VALUES('"+cveTProd+"','"+descripcion+"')";
         try{
             Statement stmt=Conexion.connection.createStatement();//El statement se usa para interactuar con sql
             stmt.executeUpdate(query);//Usar para insertar, actualizar o eliminar
@@ -48,7 +38,7 @@ public class ProductoDAO {
         }
     }
     public void ACTUALIZAR(){
-        String query="UPDATE Producto SET precio="+precio+",cveTProd='"+cveTProd+"' WHERE cveProducto='"+cveProducto+"'";
+        String query="UPDATE TipoProd SET descripcion='"+descripcion+"' WHERE cveTProd='"+cveTProd+"'";
         try{
             Statement stmt=Conexion.connection.createStatement();
             stmt.executeUpdate(query);
@@ -57,7 +47,7 @@ public class ProductoDAO {
         }
     }
     public void ELIMINAR(){
-        String query="DELETE FROM Producto WHERE cveProducto='"+cveProducto+"'";
+        String query="DELETE FROM TipoProd WHERE cveTProd="+cveTProd;
         try{
             Statement stmt=Conexion.connection.createStatement();
             stmt.executeUpdate(query);
@@ -65,19 +55,18 @@ public class ProductoDAO {
             e.printStackTrace();
         }
     }
-    public ObservableList<ProductoDAO> CONSULTAR(){
-        ObservableList<ProductoDAO> listProd= FXCollections.observableArrayList();
-        String query="SELECT * FROM Producto";
+    public ObservableList<TipoProdDAO> CONSULTAR(){
+        ObservableList<TipoProdDAO> listTipProd= FXCollections.observableArrayList();
+        String query="SELECT * FROM TipoProd";
         try{
-            ProductoDAO objProd;
+            TipoProdDAO objTipProd;
             Statement stmt=Conexion.connection.createStatement();
             ResultSet res=stmt.executeQuery(query);
             while(res.next()){
-                objProd=new ProductoDAO();
-                objProd.cveProducto=res.getString("cveProducto");
-                objProd.precio=res.getDouble("precio");
-                objProd.cveTProd=res.getString("cveTProd");
-                listProd.add(objProd);
+                objTipProd=new TipoProdDAO();
+                objTipProd.setCveTProd(res.getString("cveTProd"));
+                objTipProd.setDescripcion(res.getString("descripcion"));
+                listTipProd.add(objTipProd);
             }
         }catch(Exception e){
             //e.printStackTrace();
@@ -90,6 +79,6 @@ public class ProductoDAO {
                 if (result.get() == ButtonType.OK) {}
             }catch (Exception e1){}
         }
-        return listProd;
+        return listTipProd;
     }
 }

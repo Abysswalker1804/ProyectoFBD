@@ -9,9 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.proyectobd.Modelos.Conexion;
-import org.example.proyectobd.Vistas.ClientesScreen;
-import org.example.proyectobd.Vistas.EmpleadosScreen;
-import org.example.proyectobd.Vistas.PedidosScreen;
+import org.example.proyectobd.Vistas.*;
 import org.kordamp.bootstrapfx.BootstrapFX;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
@@ -26,7 +24,7 @@ public class HelloApplication extends Application {
     private BorderPane bdpPrincipal;
     private MenuBar mnbPrincipal;
     private Menu menPdctos, menPedidos, menClientes, menEmpleados, menConfigPuerto, menSalir;
-    private MenuItem mitPdctos, mitPedidos, mitClientes, mitEmpleados, mitConfigPuerto, mitSalir;
+    private MenuItem mitPdctos, mitTProd, mitPedidos, mitClientes, mitEmpleados, mitConfigPuerto, mitSalir;
     @Override
     public void start(Stage stage) throws IOException {
         CrearUI(stage);
@@ -49,6 +47,9 @@ public class HelloApplication extends Application {
         bdpPrincipal=new BorderPane();
 
         mitPdctos=new MenuItem("Productos");
+        mitPdctos.setOnAction(event -> new ProductoScreen(ventana));
+        mitTProd=new MenuItem("Tipo Productos");
+        mitTProd.setOnAction(event -> new TipoProdScreen(ventana));
         mitPedidos=new MenuItem("Pedidos");
         mitPedidos.setOnAction(event -> new PedidosScreen(ventana));
         mitClientes=new MenuItem("Clientes");
@@ -61,7 +62,7 @@ public class HelloApplication extends Application {
         mitSalir.setOnAction(event -> System.exit(0));
 
         menPdctos=new Menu("Productos");
-        menPdctos.getItems().add(mitPdctos);
+        menPdctos.getItems().addAll(mitPdctos, mitTProd);
         menPedidos=new Menu("Pedidos");
         menPedidos.getItems().add(mitPedidos);
         menClientes=new Menu("Clientes");

@@ -38,13 +38,13 @@ public class PedidosScreen extends Stage {
         pnlPrincipal=new Panel("Pedidos");
         pnlPrincipal.getStyleClass().add("panel-success");
         btnAgregar=new Button("Agregar");
-        btnAgregar.setOnAction(event -> new PedidoFormulario(modalStage));
+        btnAgregar.setOnAction(event -> new PedidoFormulario(modalStage,tbvPed));
         tlbBarra=new ToolBar(btnAgregar);
         bdpPrincipal.setTop(tlbBarra);
         pnlPrincipal.setBody(bdpPrincipal);
         CrearTabla();
         bdpPrincipal.setCenter(tbvPed);
-        escena=new Scene(pnlPrincipal,1000,300);
+        escena=new Scene(pnlPrincipal,1050,300);
         escena.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
     }
     private void CrearTabla(){
@@ -68,13 +68,13 @@ public class PedidosScreen extends Stage {
                 new Callback<TableColumn<VistaPedidoDAO, String>, TableCell<VistaPedidoDAO, String>>() {
                     @Override
                     public TableCell<VistaPedidoDAO, String> call(TableColumn<VistaPedidoDAO, String> param) {
-                        return null;//Poner Boton
+                        return new BotonPedido(modalStage);
                     }
                 }
         );
 
-        TableColumn<VistaPedidoDAO,String> tbcPrecioBase=new TableColumn<>("Precio Base");
-        tbcPrecioBase.setCellValueFactory(new PropertyValueFactory<>(""));
+        TableColumn<VistaPedidoDAO,String> tbcPrecioBase=new TableColumn<>("Precio Base/Rebanada");
+        tbcPrecioBase.setCellValueFactory(new PropertyValueFactory<>("precio"));
 
         TableColumn<VistaPedidoDAO,Double> tbcPrecioAdicional=new TableColumn<>("Precio Adicional");
         tbcPrecioAdicional.setCellValueFactory(new PropertyValueFactory<>("PrecioAdicional"));
@@ -94,8 +94,8 @@ public class PedidosScreen extends Stage {
         TableColumn<VistaPedidoDAO,String> tbcNomEmpleado=new TableColumn<>("Empleado");
         tbcNomEmpleado.setCellValueFactory(new PropertyValueFactory<>("nombreEmpleado"));
 
-        tbvPed.getColumns().addAll(tbcNoPed,tbcCvePdcto,tbcfechaPed,tbcfechaEnt,tbcPrecioBase,tbcPrecioAdicional,tbcCantidad,tbcCostoTotal,tbcAbono,tbcNomCliente,tbcNomEmpleado);
-        //tbvPed.setItems(objVisPed.CONSULTAR());
+        tbvPed.getColumns().addAll(tbcNoPed,tbcCvePdcto,tbcfechaPed,tbcfechaEnt,tbcDescripcion,tbcPrecioBase,tbcPrecioAdicional,tbcCantidad,tbcCostoTotal,tbcAbono,tbcNomCliente,tbcNomEmpleado);
+        tbvPed.setItems(objVisPed.CONSULTAR());
     }
 }
 
@@ -103,7 +103,7 @@ class BotonPedido extends TableCell<VistaPedidoDAO,String>{
     private Stage propietario;
     private Button btnCelda;
     private VistaPedidoDAO objVisPed;
-    public BotonPedido(Stage propietario, int opc){
+    public BotonPedido(Stage propietario){
         this.propietario=propietario;
         String text="Ver detalles";
         btnCelda=new Button(text);
@@ -115,13 +115,18 @@ class BotonPedido extends TableCell<VistaPedidoDAO,String>{
         Label lblTexto=new Label(objVisPed.getDescripcion());
         VBox vCajaTexto=new VBox(lblTexto);
         vCajaTexto.setAlignment(Pos.CENTER);
-        Scene escena=new Scene(vCajaTexto);
+        Scene escena=new Scene(vCajaTexto,200,50);
         Stage modalStage=new Stage();
         modalStage.initModality(Modality.WINDOW_MODAL);
         modalStage.initOwner(propietario);
         modalStage.setScene(escena);
         modalStage.setTitle("");
         modalStage.showAndWait();
-
+    }
+    @Override
+    protected void updateItem(String item, boolean empty){
+        super.updateItem(item,empty);
+        if(!empty)
+            this.setGraphic(btnCelda);
     }
 }

@@ -55,14 +55,14 @@ public class EmpleadoFormulario {
     private  void Guardar(){
         boolean valoresValidos=true;
         String temp=txtCampos[0].getText();
-        if(temp.length()<3 && !temp.isEmpty() && !temp.isBlank()) {
+        if(!temp.isBlank() && temp.length() == 2) {
             objEmp.setCveEmpleado(temp);
         }else{
             try{
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Mensaje del Sistema");
                 alert.setHeaderText("Clave inválida");
-                alert.setContentText("Debe ser un máximo de 2 carácteres!");
+                alert.setContentText("Debe ser de 2 carácteres!");
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK) {}
             }catch (Exception e){}
@@ -105,8 +105,7 @@ public class EmpleadoFormulario {
                 alert.setHeaderText("Número de teléfono inválido");
                 alert.setContentText("Debe ser un máximo de 10 carácteres!");
                 Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK) {
-                }
+                if (result.get() == ButtonType.OK) {}
             }catch (Exception e){}
             valoresValidos=false;
         }
@@ -123,8 +122,8 @@ public class EmpleadoFormulario {
                     alert.setContentText("Revise nuevamente!");
                     Optional<ButtonType> result = alert.showAndWait();
                     if (result.get() == ButtonType.OK) {}
-                    valoresValidos = false;
                 }catch (Exception e1){}
+                valoresValidos = false;
             }
         }else{
             try{
