@@ -60,7 +60,7 @@ public class ProductoFormulario extends Stage {
                 tbvPdcto.refresh();
             }else{
                 try {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                     alert.setTitle("Advertencia");
                     alert.setHeaderText("Actualizar!");
                     alert.setContentText("La clave que ingresó ya existe!\nDesea actualizarlo?");

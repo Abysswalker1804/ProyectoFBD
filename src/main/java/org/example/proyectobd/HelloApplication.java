@@ -23,8 +23,8 @@ public class HelloApplication extends Application {
     private Panel pnlPrincipal;
     private BorderPane bdpPrincipal;
     private MenuBar mnbPrincipal;
-    private Menu menPdctos, menPedidos, menClientes, menEmpleados, menConfigPuerto, menSalir;
-    private MenuItem mitPdctos, mitTProd, mitPedidos, mitClientes, mitEmpleados, mitConfigPuerto, mitSalir;
+    private Menu menMP,menPrendas, menPdctos, menPedidos, menClientes, menEmpleados, menConfigPuerto, menSalir;
+    private MenuItem mitMP, mitTMP,mitPrendas, mitTPrendas, mitPdctos, mitTProd, mitPedidos, mitClientes, mitEmpleados, mitConfigPuerto, mitSalir;
     @Override
     public void start(Stage stage) throws IOException {
         CrearUI(stage);
@@ -46,6 +46,14 @@ public class HelloApplication extends Application {
         pnlPrincipal.getStyleClass().add("panel-primary");
         bdpPrincipal=new BorderPane();
 
+        mitMP=new MenuItem("Materia Prima");
+        mitMP.setOnAction(event -> new MateriaPrimaScreen(ventana));
+        mitTMP=new MenuItem("Tipo Materia Prima");
+        mitTMP.setOnAction(event -> new TipoMPScreen(ventana));
+        mitPrendas=new MenuItem("Prendas");
+        mitPrendas.setOnAction(event -> new PrendaScreen(ventana));
+        mitTPrendas=new MenuItem("Tipo Prendas");
+        mitTPrendas.setOnAction(event -> new TipoPrendaScreen(ventana));
         mitPdctos=new MenuItem("Productos");
         mitPdctos.setOnAction(event -> new ProductoScreen(ventana));
         mitTProd=new MenuItem("Tipo Productos");
@@ -61,6 +69,10 @@ public class HelloApplication extends Application {
         mitSalir=new MenuItem("Salir");
         mitSalir.setOnAction(event -> System.exit(0));
 
+        menMP=new Menu("Materia Prima");
+        menMP.getItems().addAll(mitMP,mitTMP);
+        menPrendas=new Menu("Prendas");
+        menPrendas.getItems().addAll(mitPrendas,mitTPrendas);
         menPdctos=new Menu("Productos");
         menPdctos.getItems().addAll(mitPdctos, mitTProd);
         menPedidos=new Menu("Pedidos");
@@ -75,16 +87,13 @@ public class HelloApplication extends Application {
         menSalir.getItems().add(mitSalir);
 
         mnbPrincipal=new MenuBar();
-        mnbPrincipal.getMenus().addAll(menPdctos,menPedidos,menClientes,menEmpleados,menConfigPuerto,menSalir);
+        mnbPrincipal.getMenus().addAll(menMP,menPrendas,menPdctos,menPedidos,menClientes,menEmpleados,menConfigPuerto,menSalir);
         bdpPrincipal.setTop(mnbPrincipal);
 
         pnlPrincipal.setBody(bdpPrincipal);
         escena=new Scene(pnlPrincipal);
         escena.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
 
-    }
-    private void Puerto(Stage ventana){
-        ConvertirModal(ventana,PuertoScreen());
     }
     private void ConvertirModal(Stage ventana,Scene escenaModal){
         modalStage=new Stage();

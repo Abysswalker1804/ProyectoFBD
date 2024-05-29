@@ -7,8 +7,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.proyectobd.Modelos.Conexion;
-import org.example.proyectobd.Modelos.TipoProdDAO;
-import org.example.proyectobd.Vistas.TipoProdScreen;
+import org.example.proyectobd.Modelos.TipoPrendaDAO;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,23 +15,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class TipoProdFormulario extends Stage {
+public class TipoPrendaFormulario {
     private Stage modalStage;
     private Scene escena;
     private final String[] arrPrompts = {"Clave de Tipo","Descripción"};
     private TextField[] arrCampos;
     private Button btnGuardar;
-    private TableView<TipoProdDAO> tbvTProd;
-    private TipoProdDAO objTProd;
-    public TipoProdFormulario(Stage propietario, TableView<TipoProdDAO> tbvTProd, TipoProdDAO objTProd){
-        this.tbvTProd=tbvTProd;
-        this.objTProd=(objTProd==null)?new TipoProdDAO(): objTProd;
+    private TableView<TipoPrendaDAO> tbvTPren;
+    private TipoPrendaDAO objTPren;
+    public TipoPrendaFormulario(Stage propietario, TableView<TipoPrendaDAO> tbvTPren, TipoPrendaDAO objTPren){
+        this.tbvTPren=tbvTPren;
+        this.objTPren=(objTPren==null)?new TipoPrendaDAO(): objTPren;
         CrearUI();
         modalStage = new Stage();
         modalStage.initModality(Modality.WINDOW_MODAL);
         modalStage.initOwner(propietario);
         modalStage.setScene(escena);
-        modalStage.setTitle("Formulario Tipo Producto");
+        modalStage.setTitle("Formulario Tipo Prenda");
         modalStage.showAndWait();
     }
     private void CrearUI(){
@@ -45,7 +44,7 @@ public class TipoProdFormulario extends Stage {
             arrCampos[i].setMaxWidth(150);
         }
         VBox vPrincipal=new VBox(arrCampos);
-        vPrincipal.getChildren().add(new Label("Ingrese una descripcion concisa y corta.\nEjemplo: 'PASTEL','PAY',..."));
+        vPrincipal.getChildren().add(new Label("Ingrese una descripcion concisa y corta.\nEjemplo: 'CAMISA','PLAYERA','SHORTS',..."));
         vPrincipal.getChildren().add(btnGuardar);
         vPrincipal.setAlignment(Pos.CENTER);
         vPrincipal.setSpacing(10);
@@ -54,9 +53,9 @@ public class TipoProdFormulario extends Stage {
     private void Guardar(){
         if(ValidarCampos()){
             if(CompararCve()){
-                objTProd.INSERTAR();
-                tbvTProd.setItems(objTProd.CONSULTAR());
-                tbvTProd.refresh();
+                objTPren.INSERTAR();
+                tbvTPren.setItems(objTPren.CONSULTAR());
+                tbvTPren.refresh();
             }else{
                 try {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -65,9 +64,9 @@ public class TipoProdFormulario extends Stage {
                     alert.setContentText("La clave que ingresó ya existe!\nDesea actualizarlo?");
                     Optional<ButtonType> result = alert.showAndWait();
                     if (result.get() == ButtonType.OK) {
-                        objTProd.ACTUALIZAR();
-                        tbvTProd.setItems(objTProd.CONSULTAR());
-                        tbvTProd.refresh();
+                        objTPren.ACTUALIZAR();
+                        tbvTPren.setItems(objTPren.CONSULTAR());
+                        tbvTPren.refresh();
                     }
                 }catch (Exception e){}
             }
@@ -79,21 +78,21 @@ public class TipoProdFormulario extends Stage {
             try {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
-                alert.setHeaderText("Tipo de Producto inválido!");
-                alert.setContentText("El tipo de producto no puede quedar vacío!");
+                alert.setHeaderText("Tipo de Prenda inválida!");
+                alert.setContentText("El tipo de prenda no puede quedar vacío!");
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK) {}
             }catch (Exception e1){}
             flag=false;
         }else{
             if(arrCampos[0].getText().length()==3){
-                objTProd.setCveTProd(arrCampos[0].getText());
+                objTPren.setCveTPrenda(arrCampos[0].getText());
             }else{
                 try {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error");
-                    alert.setHeaderText("Tipo de Producto inválido!");
-                    alert.setContentText("El tipo de producto debe ser de 3 carácteres!");
+                    alert.setHeaderText("Tipo de Prenda inválida!");
+                    alert.setContentText("El tipo de prenda debe ser de 3 carácteres!");
                     Optional<ButtonType> result = alert.showAndWait();
                     if (result.get() == ButtonType.OK) {}
                 }catch (Exception e1){}
@@ -112,7 +111,7 @@ public class TipoProdFormulario extends Stage {
             }catch (Exception e1){}
             flag=false;
         }else{
-            objTProd.setDescripcion(arrCampos[1].getText().replace(" ","").toUpperCase());
+            objTPren.setDescripcion(arrCampos[1].getText().replace(" ","").toUpperCase());
         }
         return  flag;
     }
@@ -122,14 +121,14 @@ public class TipoProdFormulario extends Stage {
         ResultSet res;
 
         try {
-            String query = "SELECT cveTProd FROM TipoProd";
+            String query = "SELECT cveTPrenda FROM TipoPrenda";
             preparedStatement = Conexion.connection.prepareStatement(query);
             res = preparedStatement.executeQuery();
 
             List<String> projection = new ArrayList<>();
 
             while (res.next()) {
-                String value = res.getString("cveTProd");
+                String value = res.getString("cveTPrenda");
                 if (value != null && !value.isEmpty()) {
                     projection.add(value);
                 }
@@ -137,7 +136,7 @@ public class TipoProdFormulario extends Stage {
             // Ahora `projection` contiene la proyección de la columna en caracteres
             // Puedes comparar estos caracteres con un dato de tipo `char`
 
-            String datoComparar = objTProd.getCveTProd(); // Dato a comparar
+            String datoComparar = objTPren.getCveTPrenda(); // Dato a comparar
 
             for (String c : projection) {
                 if (c.equals(datoComparar)) {
